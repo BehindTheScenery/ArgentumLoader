@@ -1,0 +1,35 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+import org.gradle.api.initialization.resolve.RulesMode
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://maven.neoforged.net/releases' }
+    }
+
+    plugins {
+        id 'net.neoforged.moddev' version '1.0.14'
+        id 'net.neoforged.moddev.repositories' version '1.0.14'
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+    id 'net.neoforged.moddev.repositories'
+}
+
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    rulesMode = RulesMode.FAIL_ON_PROJECT_RULES
+    repositories {
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'ArgentumLoader'
+
+include 'loader'
+include 'earlydisplay'
+include 'junit'
+include 'tests'
+enableFeaturePreview "STABLE_CONFIGURATION_CACHE"
