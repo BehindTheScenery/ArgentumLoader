@@ -1,5 +1,6 @@
 plugins {
     id 'com.github.ben-manes.versions' version '0.39.0'
+    id 'co.uzzu.dotenv.gradle' version "4.0.0"
     id 'net.neoforged.licenser' version '0.7.2' apply false
     id 'com.diffplug.spotless' version '6.25.0' apply false
     id 'net.neoforged.gradleutils' version "${gradleutils_version}"
@@ -28,7 +29,7 @@ allprojects {
         setupSigning(signAllPublications: true)
     }
 
-    group = 'net.neoforged.fancymodloader'
+    group = 'dev.behindthescenery.argentum-loader'
     version = rootProject.version
 
     spotlessUtils.configure(spotless)
@@ -83,18 +84,30 @@ subprojects { subProject ->
     }
 
     publishing {
-        publications {
-            maven(MavenPublication) {
-                from components.java
+        repositories {
+            maven {
+                name = "Local"
+                url = file("build/repo").toURI()
+            }
+            maven {
+                name = "GithubPackages"
+                url = uri("https://maven.pkg.github.com/BehindTheScenery/ArgentumLoader")
+                credentials {
+                    username = env.fetchOrNull("USERNAME") ?: System.getProperty("GITHUB_USERNAME")
+                    password = env.fetchOrNull("TOKEN") ?: System.getProperty("GITHUB_TOKEN")
+                }
             }
         }
 
-        repositories {
-            maven gradleutils.publishingMaven
-        }
-    }
+        publications {
+            //noinspection GroovyAssignabilityCheck
+            gpr(MavenPublication) {
+                artifactId = project.name
+                version = project.mod_version
 
-    changelog {
-        from "1.0"
+                artifact project.jar
+                artifact project.sourcesJar
+            }
+        }
     }
 }
