@@ -90,11 +90,11 @@ subprojects { subProject ->
                 url = file("build/repo").toURI()
             }
             maven {
-                name = "GithubPackages"
-                url = uri("https://maven.pkg.github.com/BehindTheScenery/ArgentumLoader")
+                name = "BTSM"
+                url = uri("https://maven.behindthescenery.online/repository/maven-releases/")
                 credentials {
-                    username = env.fetchOrNull("USERNAME") ?: System.getProperty("GITHUB_USERNAME")
-                    password = env.fetchOrNull("TOKEN") ?: System.getProperty("GITHUB_TOKEN")
+                    username = env.fetchOrNull("_USERNAME")
+                    password = env.fetchOrNull("_PASSWORD")
                 }
             }
         }
